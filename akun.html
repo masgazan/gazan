@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>10 Kolom Input Otomatis Simpan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    .input-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .input-row input {
+      width: 300px;
+      padding: 8px;
+      margin-right: 10px;
+    }
+    button {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>10 Kolom Input (Simpan Otomatis + Copy)</h2>
+
+  <div id="inputContainer">
+    <!-- Baris input akan digenerate dengan JavaScript -->
+  </div>
+
+  <script>
+    const inputContainer = document.getElementById('inputContainer');
+
+    // Muat data dari localStorage saat halaman dibuka
+    const savedData = JSON.parse(localStorage.getItem('savedInputs') || '{}');
+
+    for (let i = 1; i <= 10; i++) {
+      const row = document.createElement('div');
+      row.className = 'input-row';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.id = 'input' + i;
+      input.placeholder = 'Kolom ' + i;
+
+      // Set nilai dari localStorage jika ada
+      if (savedData['input' + i]) {
+        input.value = savedData['input' + i];
+      }
+
+      // Simpan ke localStorage saat diketik
+      input.addEventListener('input', () => {
+        savedData['input' + i] = input.value;
+        localStorage.setItem('savedInputs', JSON.stringify(savedData));
+      });
+
+      const copyBtn = document.createElement('button');
+      copyBtn.textContent = 'Copy';
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(input.value).then(() => {
+          alert('Kolom ' + i + ' disalin!');
+        });
+      };
+
+      row.appendChild(input);
+      row.appendChild(copyBtn);
+      inputContainer.appendChild(row);
+    }
+  </script>
+
+</body>
+</html>
